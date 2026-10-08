@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { NAME, JOB_TITLE, BUILT_WITH, NAV_ITEMS, FOOTER_LINKS } from "@/constants/details"
 
@@ -102,6 +102,22 @@ function Layout() {
   const [headerVisible, setHeaderVisible] = useHeaderVisibility();
   const [menuOpen, setMenuOpen] = useState(false);
   const { pathname } = useLocation();
+  const headerRef = useRef<HTMLElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    const updateHeaderHeight = () => {
+      setHeaderHeight(header.getBoundingClientRect().height);
+    };
+
+    updateHeaderHeight();
+    const observer = new ResizeObserver(updateHeaderHeight);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
 
   // Close the mobile menu after navigating.
   useEffect(() => {
@@ -134,6 +150,7 @@ function Layout() {
   return (
     <div
       className="flex min-h-screen flex-col bg-[#0A0E14] bg-[linear-gradient(to_right,rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:48px_48px] text-[#E6EDF3] antialiased [color-scheme:dark] selection:bg-[#4CC9F0]/30"
+      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
     >
       <a
         href="#main"
@@ -144,6 +161,7 @@ function Layout() {
 
       {/* ------------------------------ Header ------------------------------ */}
       <header
+        ref={headerRef}
         // Keyboard users tabbing into a hidden header should see it.
         onFocusCapture={() => setHeaderVisible(true)}
         className={`sticky top-0 z-50 border-b border-[#1E2733] bg-[#0A0E14]/80 backdrop-blur-md transition-transform duration-300 ease-out motion-reduce:transition-none ${
@@ -157,7 +175,7 @@ function Layout() {
           {/* Wordmark */}
           <Link
             to="/"
-            className="group flex items-center font-mono text-[15px] font-semibold tracking-tight outline-offset-4 focus-visible:outline-2 focus-visible:outline-[#4CC9F0]"
+            className="group flex items-center text-[15px] font-semibold tracking-tight outline-offset-4 focus-visible:outline-2 focus-visible:outline-[#4CC9F0]"
           >
             <span aria-hidden className="mr-2 text-[#4CC9F0]">
               &gt;
@@ -179,7 +197,7 @@ function Layout() {
                   to={to}
                   end={end}
                   className={({ isActive }) =>
-                    `group relative font-mono text-sm outline-offset-8 transition-colors duration-200 hover:[text-shadow:0_0_14px_rgba(76,201,240,0.55)] focus-visible:outline-2 focus-visible:outline-[#4CC9F0] ${
+                    `group relative text-sm outline-offset-8 transition-colors duration-200 hover:[text-shadow:0_0_14px_rgba(76,201,240,0.55)] focus-visible:outline-2 focus-visible:outline-[#4CC9F0] ${
                       isActive
                         ? "text-[#4CC9F0]"
                         : "text-[#8793A3] hover:text-[#E6EDF3]"
@@ -260,7 +278,7 @@ function Layout() {
                     to={to}
                     end={end}
                     className={({ isActive }) =>
-                      `group relative flex min-h-14 items-center justify-between px-5 py-4 font-mono text-base transition-colors duration-200 before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-[#4CC9F0] before:transition-transform before:duration-200 hover:bg-[#4CC9F0]/5 focus-visible:bg-[#4CC9F0]/5 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#4CC9F0] motion-reduce:before:transition-none ${
+                      `group relative flex min-h-14 items-center justify-between px-5 py-4 text-base transition-colors duration-200 before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-[#4CC9F0] before:transition-transform before:duration-200 hover:bg-[#4CC9F0]/5 focus-visible:bg-[#4CC9F0]/5 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#4CC9F0] motion-reduce:before:transition-none ${
                         isActive
                           ? "bg-[#4CC9F0]/5 text-[#4CC9F0] before:scale-y-100"
                           : "text-[#E6EDF3] before:scale-y-0 hover:before:scale-y-100"
@@ -286,20 +304,24 @@ function Layout() {
       </header>
 
       {/* ------------------------------- Main ------------------------------- */}
-      <main id="main" className="flex-1">
+      <main
+        id="main"
+        className="flex-1"
+        style={{ "--layout-header-height": `${headerHeight}px` } as CSSProperties}
+      >
         <Outlet />
       </main>
 
       {/* ------------------------------ Footer ------------------------------ */}
       <footer className="border-t border-[#1E2733] bg-[#070A0F]">
         <div className="mx-auto w-full max-w-5xl px-5 py-8 sm:px-8">
-          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+          <div className="flex flex-col items-center gap-6 text-center md:flex-row md:items-start md:justify-between md:text-left">
             <div>
               <p className="font-semibold tracking-tight">{NAME}</p>
-              <p className="mt-0.5 font-mono text-sm text-[#8793A3]">{JOB_TITLE}</p>
+              <p className="mt-0.5 text-sm text-[#8793A3]">{JOB_TITLE}</p>
             </div>
 
-            <ul className="flex flex-wrap gap-x-6 gap-y-1 font-mono text-sm">
+            <ul className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm md:justify-start">
               {FOOTER_LINKS.map(({ label, href, external }) => (
                 <li key={label}>
                   <a
@@ -316,8 +338,8 @@ function Layout() {
             </ul>
           </div>
 
-          <div className="mt-8 flex flex-col gap-2 border-t border-[#1E2733] pt-5 text-xs text-[#8793A3] sm:flex-row sm:items-center sm:justify-between">
-            <p className="font-mono">
+          <div className="mt-8 flex flex-col items-center gap-2 border-t border-[#1E2733] pt-5 text-center text-xs text-[#8793A3] md:flex-row md:justify-between md:text-left">
+            <p>
               Built with{" "}
               {BUILT_WITH.map(({ label, href }, i) => (
                 <span key={label}>

@@ -61,8 +61,6 @@ export default function Certifications() {
       ref={ref}
       className="relative py-20 px-3 lg:h-screen overflow-hidden justify-center items-center flex"
     >
-      <div className="absolute top-0 left-0 right-0 h-[100%] bg-gradient-to-t from-transparent via-transparent to-white dark:to-gray-900 pointer-events-none z-10" />
-      <div className="absolute bottom-0 left-0 right-0 h-[100%] bg-gradient-to-b from-transparent via-transparent to-white dark:to-gray-900 pointer-events-none z-10" />
       <div className="mx-auto max-w-7xl flex flex-col-reverse lg:flex-row lg:grid lg:grid-cols-2 gap-12 items-center z-30">
         
         

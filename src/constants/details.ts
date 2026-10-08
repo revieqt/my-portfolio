@@ -1,10 +1,10 @@
-export const NAME = "Your Name";
+export const NAME = "Josh Opsima";
 export const JOB_TITLE = "Full-Stack Developer";
 
 export const RESUME_HREF = "/resume.pdf"; // lives in /public/resume.pdf
-export const GITHUB_HREF = "https://github.com/your-username";
-export const LINKEDIN_HREF = "https://www.linkedin.com/in/your-username";
-export const EMAIL = "your.email@gmail.com";
+export const GITHUB_HREF = "https://github.com/revieqt";
+export const LINKEDIN_HREF = "https://www.linkedin.com/in/joshopsima";
+export const EMAIL = "opsima.josh@gmail.com";
 
 export const BUILT_WITH = [
   { label: "React", href: "https://react.dev" },

@@ -78,7 +78,7 @@ export interface HeroProps {
   about?: { text: string; href: string };
   work?: { text: string; href: string };
   socials?: Social[];
-  /** Subtract a fixed navbar from the hero height, e.g. 64 or "4rem". */
+  /** Subtract a header height from the hero, e.g. 64 or "4rem". Defaults to Layout's measured header height. */
   headerOffset?: number | string;
   /** Override the GLB path if you move the file. */
   modelUrl?: string;
@@ -352,7 +352,7 @@ function SocialIcon({ name }: { name: SocialKey }) {
 /* -------------------------------------------------------------------------- */
 
 export default function Hero({
-  name = "Josh",
+  name = "Joshua",
   role = "Web Developer",
   intro = "I design and build fast, friendly web experiences. Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor.",
   about = {
@@ -364,7 +364,7 @@ export default function Hero({
     href: "#work",
   },
   socials = DEFAULT_SOCIALS,
-  headerOffset = 0,
+  headerOffset = "var(--layout-header-height, 0px)",
   modelUrl = DEFAULT_MODEL_URL,
 }: HeroProps) {
   const rootRef = useRef<HTMLElement>(null);
